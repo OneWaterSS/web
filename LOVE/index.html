@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>嗨，来玩呀</title>
+<link rel="preconnect" href="https://fonts.loli.net">
+<link href="https://fonts.loli.net/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 首页 -->
+<section id="page-home" class="page active">
+  <div class="home-wrap">
+    <div class="hero">
+      <h1 class="hero-title">嗨，来玩呀 <span class="wave">👋</span></h1>
+      <p class="hero-sub">做了三个小游戏，摸鱼的时候可以玩玩<br>全部通关的话……有个小东西给你</p>
+    </div>
+
+    <div class="game-cards">
+      <button class="game-card" data-game="memory">
+        <span class="card-emoji">🃏</span>
+        <span class="card-name">翻翻乐</span>
+        <span class="card-desc">8对小卡片，考的就是记性</span>
+        <span class="card-best" id="best-memory">还没玩过</span>
+      </button>
+      <button class="game-card" data-game="quiz">
+        <span class="card-emoji">💭</span>
+        <span class="card-name">默契大考验</span>
+        <span class="card-desc">10道关于我的小题</span>
+        <span class="card-best" id="best-quiz">还没玩过</span>
+      </button>
+      <button class="game-card" data-game="hearts">
+        <span class="card-emoji">💜</span>
+        <span class="card-name">爱心捕手</span>
+        <span class="card-desc">30秒，手速说话</span>
+        <span class="card-best" id="best-hearts">还没玩过</span>
+      </button>
+    </div>
+
+    <button id="secret-btn" class="secret-btn locked" disabled>
+      <span id="secret-text">通关进度 0/3 🔒</span>
+    </button>
+
+    <p class="footer-tip">电脑手机都能玩，进度会自动保存 :)</p>
+    <button class="sound-fab" id="sound-home" aria-label="声音开关">🔊</button>
+  </div>
+</section>
+
+<!-- 游戏页 -->
+<section id="page-game" class="page">
+  <header class="game-header">
+    <button class="icon-btn" id="back-btn" aria-label="返回首页">← 返回</button>
+    <button class="icon-btn" id="sound-btn" aria-label="声音开关">🔊</button>
+  </header>
+  <div id="game-area"></div>
+</section>
+
+<!-- 彩蛋页 -->
+<section id="page-secret" class="page">
+  <div class="secret-bg" id="secret-bg"></div>
+  <audio id="bgm" src="mysoul.mp3" loop preload="auto"></audio>
+  <div class="secret-content">
+    <article class="secret-letter">
+      <div class="letter-top">💌</div>
+      <p class="letter-note">（语文不好，将就看 😜）</p>
+      <p class="letter-dear">亲爱的甜甜姐姐：</p>
+      <p class="letter-para">认识你是我的幸运，和你相处的这段时间，我真的很开心，也很放松，想和你一起看电影，一起吃火锅，一起散步。</p>
+      <p class="letter-para">我承认最开始是欲望驱使和你相处，但现在我也越来越离不开你，想无时无刻都黏着你。</p>
+      <p class="letter-para">好想呆在你身边，哪怕什么也不做，什么也不说，就这样静静的看着，也会感觉很幸福。</p>
+      <p class="letter-para">我会找机会给你一个正式的表白，我相信我们可以一起走很久。</p>
+      <p class="letter-para">我有点害怕给你说太多，我怕你会觉得不现实，怕你会觉得我是随便说说，但这些就是我心里面所想的。</p>
+      <p class="letter-final">喜欢你，这一切似乎都是天命所归。</p>
+    </article>
+    <div class="secret-actions">
+      <button class="music-btn" id="music-btn">🎵 播放音乐</button>
+      <button class="primary-btn" id="secret-back">回到首页</button>
+    </div>
+  </div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
