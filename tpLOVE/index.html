@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>给你看点东西</title>
+<meta name="theme-color" content="#F7F4EF">
+<style>
+:root{
+  --paper:#F7F4EF;
+  --sand:#EDE6DA;
+  --amber:#C8843C;
+  --ink:#26211C;
+  --moss:#5C6B5A;
+  --rose:#DDA9AE;
+  --serif:"Songti SC","Noto Serif SC","Source Han Serif SC",STSong,SimSun,serif;
+  --kai:"LXGW WenKai","霞鹜文楷",Kaiti SC,STKaiti,KaiTi,var(--serif);
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--kai);
+  font-size:17px;line-height:1.9;letter-spacing:.02em;
+  overflow-x:hidden;
+}
+img{display:block;width:100%;height:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* 纸纹 */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.045;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+}
+
+/* 进度条 */
+#bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--amber);z-index:100;transition:width .1s linear}
+
+.wrap{max-width:560px;margin:0 auto;padding-left:6%;padding-right:6%;position:relative}
+
+/* 页码 */
+.folio{position:absolute;right:6%;bottom:22px;font-family:var(--sans);font-size:11px;letter-spacing:.14em;color:var(--moss);opacity:.5}
+
+/* 屏 */
+section{position:relative}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .85s cubic-bezier(.22,.61,.36,1),transform .85s cubic-bezier(.22,.61,.36,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== S1 封面 ===== */
+#cover{min-height:100svh;min-height:100vh;display:flex;align-items:flex-end;background:#1b1713;overflow:hidden}
+#cover .ph{position:absolute;inset:0}
+#cover .ph img{width:100%;height:100%;object-fit:cover;opacity:.9;
+  animation:kb 14s ease-out both}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.07)}}
+#cover .veil{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,16,12,.15) 0%,rgba(20,16,12,.05) 40%,rgba(20,16,12,.62) 100%)}
+#cover .txt{position:relative;width:100%;padding:0 8% 15vh;color:#FBF8F3}
+#cover h1{font-family:var(--serif);font-size:31px;font-weight:500;line-height:1.5;letter-spacing:.04em}
+#cover .sub{margin-top:14px;font-size:15px;color:rgba(251,248,243,.72);letter-spacing:.08em}
+#cover .hint{position:absolute;left:50%;bottom:4.5vh;transform:translateX(-50%);width:1px;height:34px;background:linear-gradient(to bottom,rgba(251,248,243,.55),transparent);animation:br 2.6s ease-in-out infinite}
+@keyframes br{0%,100%{opacity:.25;transform:translateX(-50%) translateY(-4px)}50%{opacity:.9;transform:translateX(-50%) translateY(4px)}}
+
+/* ===== S2 开场 ===== */
+#s2{padding-top:19vh;padding-bottom:17vh}
+#s2 .ln{font-size:19px;line-height:2.1;color:var(--ink)}
+#s2 .ln+.ln{margin-top:6px}
+#s2 .dash{width:26px;height:1px;background:var(--amber);margin:30px 0;opacity:.75}
+
+/* ===== S3 提问 ===== */
+#s3{background:var(--sand);padding-top:16vh;padding-bottom:16vh}
+#s3 .q{font-family:var(--serif);font-size:23px;line-height:1.95;letter-spacing:.03em}
+#s3 .q span{display:block}
+#s3 .q span:nth-child(2){padding-left:1.6em}
+#s3 .q span:nth-child(3){padding-left:.4em}
+#s3 .mark{font-family:var(--sans);font-size:11px;letter-spacing:.2em;color:var(--moss);margin-bottom:26px;opacity:.8}
+
+/* ===== 小节标题 ===== */
+.head{font-family:var(--sans);font-size:11px;letter-spacing:.22em;color:var(--moss);opacity:.85;margin-bottom:4px}
+.head b{font-weight:400}
+
+/* ===== S4 吃的 ===== */
+.strip{padding-top:12vh;padding-bottom:6vh}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 13px;margin-top:26px;align-items:start}
+.grid .it:nth-child(even){margin-top:34px}
+.grid .it.full{grid-column:1/-1;margin-top:34px}
+figure{margin:0}
+figure img{border-radius:6px;box-shadow:0 2px 12px rgba(38,33,28,.07)}
+figcaption{font-family:var(--kai);font-size:13.5px;line-height:1.75;color:var(--moss);margin-top:8px;letter-spacing:.02em}
+.full figcaption{text-align:center}
+
+/* ===== S5 猫 ===== */
+#s5{background:var(--sand);padding-top:11vh;padding-bottom:11vh}
+.stack{display:flex;flex-direction:column;gap:34px;margin-top:26px}
+.stack .it.w70{width:74%}
+.stack .it.w85{width:88%;align-self:flex-end}
+.stack .it.w100{width:100%}
+.stack .it.w60{width:62%}
+
+/* ===== S6 天 ===== */
+#s6{padding-top:12vh;padding-bottom:12vh}
+.photo-big{margin:0 0 40px}
+.photo-big img{border-radius:6px;box-shadow:0 3px 16px rgba(38,33,28,.08)}
+.photo-big figcaption{text-align:center;margin-top:10px}
+.inset{width:66%;margin:0 auto 40px}
+.inset img{border-radius:6px;box-shadow:0 3px 16px rgba(38,33,28,.08)}
+.inset figcaption{text-align:center;margin-top:10px}
+
+/* ===== S7 回答 ===== */
+#s7{padding-top:20vh;padding-bottom:19vh;text-align:center}
+#s7 .ans{font-family:var(--serif);font-size:25px;letter-spacing:.05em;line-height:1.8}
+#s7 .tiny{font-family:var(--sans);font-size:11px;letter-spacing:.22em;color:var(--moss);opacity:.6;margin-top:22px}
+
+/* ===== S8 信 ===== */
+#s8{background:linear-gradient(to bottom,var(--sand) 0%,#E4DACA 100%);padding-top:15vh;padding-bottom:16vh}
+.letter{position:relative}
+.letter img{border-radius:4px;box-shadow:0 10px 30px rgba(38,33,28,.14);filter:blur(9px);transition:filter 1.1s ease}
+.letter.in img{filter:blur(0)}
+.letter .wp{width:100%;transform:rotate(-.7deg)}
+.letter .wp2{width:92%;margin:22px auto 0;transform:rotate(1deg)}
+.letterfig{font-family:var(--sans);font-size:11px;letter-spacing:.14em;color:var(--moss);opacity:.75;margin-top:14px;text-align:right}
+.quote{margin:44px 0 0;text-align:center}
+.quote p{font-family:var(--serif);font-size:22px;line-height:1.9;letter-spacing:.04em}
+.quote p+p{margin-top:16px}
+.en{font-family:var(--sans);font-size:10px;letter-spacing:.16em;line-height:2;color:var(--moss);opacity:.7;text-align:center;margin-top:44px;text-transform:uppercase}
+
+/* ===== S9 结尾 ===== */
+#s9{padding-top:12vh;padding-bottom:16vh}
+.evid{display:grid;grid-template-columns:1fr 1fr;gap:22px 13px;margin-bottom:16vh}
+.evid .it:nth-child(even){margin-top:26px}
+.evid img{border-radius:6px;box-shadow:0 2px 12px rgba(38,33,28,.07)}
+.end{text-align:center}
+.end .big{font-family:var(--serif);font-size:22px;line-height:1.95;letter-spacing:.04em}
+.sign{margin-top:52px;font-family:var(--sans);font-size:11px;letter-spacing:.2em;color:var(--moss);opacity:.75}
+.sign .name{display:inline-block;color:var(--amber);cursor:pointer;padding:2px 4px;border-bottom:1px dashed rgba(200,132,60,.5)}
+#whisper{margin-top:20px;font-family:var(--kai);font-size:15px;color:var(--ink);opacity:0;transition:opacity .6s ease;min-height:1.9em}
+#whisper.on{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  #cover .ph img{animation:none}
+  .letter img{filter:none;transition:none}
+  #cover .hint{animation:none}
+}
+@media (min-width:700px){
+  body{font-size:18px}
+  #cover h1{font-size:38px}
+  #s3 .q{font-size:26px}
+  #s8 .quote p{font-size:25px}
+  #s7 .ans{font-size:29px}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<h1 class="sr">一个写给甜甜的小网站：我喜欢你，想和你待在一起。</h1>
+
+<!-- S1 -->
+<section id="cover">
+  <div class="ph"><img src="assets/35.webp" alt="" fetchpriority="high"></div>
+  <div class="veil"></div>
+  <div class="txt">
+    <h1>给你看点东西。</h1>
+    <p class="sub">慢慢往下滑就行。</p>
+  </div>
+  <div class="hint"></div>
+</section>
+
+<!-- S2 -->
+<section id="s2" class="wrap">
+  <div class="reveal">
+    <p class="ln">想了很久，还是不知道该从哪里写起。</p>
+    <p class="ln">所以就用这个方式开始吧。</p>
+    <div class="dash"></div>
+    <p class="ln" style="color:var(--moss);font-size:16px">下面这些，都是我们。</p>
+  </div>
+  <div class="folio">01 / 08</div>
+</section>
+
+<!-- S3 -->
+<section id="s3">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="mark">先说一个问题</div>
+      <div class="q">
+        <span>我们有没有</span>
+        <span>一起吃过饭、一起散过步</span>
+        <span>一起做过许许多多平凡却又开心的事情？</span>
+      </div>
+    </div>
+  </div>
+  <div class="folio">02 / 08</div>
+</section>
+
+<!-- S4 吃的 -->
+<section id="s4" class="strip wrap">
+  <div class="reveal">
+    <div class="head"><b>一 · 一起吃的饭</b></div>
+  </div>
+  <div class="grid" id="g4"></div>
+  <div class="folio">03 / 08</div>
+</section>
+
+<!-- S5 猫 -->
+<section id="s5">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="head"><b>二 · token，一只傻猫</b></div>
+    </div>
+    <div class="stack" id="g5"></div>
+    <div class="folio">04 / 08</div>
+  </div>
+</section>
+
+<!-- S6 天 -->
+<section id="s6" class="wrap">
+  <div class="reveal">
+    <div class="head"><b>三 · 走过的路，看过的天</b></div>
+  </div>
+  <div id="g6" style="margin-top:34px"></div>
+  <div class="folio">05 / 08</div>
+</section>
+
+<!-- S7 回答 -->
+<section id="s7">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="ans">我想，应该是有的吧。</div>
+    </div>
+  </div>
+  <div class="folio">06 / 08</div>
+</section>
+
+<!-- S8 信 -->
+<section id="s8">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="head" style="text-align:center;margin-bottom:30px"><b>最后 · 有些话想认真说</b></div>
+    </div>
+    <div class="letter reveal">
+      <figure class="wp"><img src="assets/19.webp" alt="手写信第一页" loading="lazy"></figure>
+      <figure class="wp2"><img src="assets/00.webp" alt="手写信第二页" loading="lazy"></figure>
+      <div class="letterfig">——写了两个晚上</div>
+    </div>
+    <div class="quote reveal">
+      <p>我真的很喜欢你。</p>
+      <p>比起许下一个遥远的承诺，<br>我更想做的，是珍惜现在。</p>
+    </div>
+    <p class="en reveal">I write a letter in the evening,<br>carrying the afterglow of sunset<br>and the romance of the Milky Way.</p>
+  </div>
+  <div class="folio">07 / 08</div>
+</section>
+
+<!-- S9 结尾 -->
+<section id="s9" class="wrap">
+  <div class="reveal">
+    <div class="head"><b>还有这些，都替你留着</b></div>
+  </div>
+  <div class="evid" id="g9"></div>
+  <div class="end reveal">
+    <p class="big">希望以后很多个普通的日子里，<br>都有你的身影。</p>
+    <div class="sign">写于某个晚上 <span class="name" id="signBtn">· 戳一下 ·</span></div>
+    <div id="whisper"></div>
+  </div>
+  <div class="folio">08 / 08</div>
+</section>
+
+<script src="data.js"></script>
+<script>
+function fig(item, lazy){
+  const c = item.cap ? `<figcaption>${item.cap}</figcaption>` : "";
+  const l = lazy === false ? ' fetchpriority="high"' : ' loading="lazy"';
+  return `<figure><img src="assets/${item.img}.webp" alt=""${l}>${c}</figure>`;
+}
+
+/* S4 吃的：交错双列；横图自动整行 */
+const g4 = document.getElementById("g4");
+DATA.s4.forEach((it, i) => {
+  const el = document.createElement("div");
+  const land = it.wide;
+  el.className = (i === 0 || land) ? "it full" : "it";
+  el.innerHTML = fig(it, i === 0 ? false : true);
+  g4.appendChild(el);
+});
+
+/* S5 token：纵向拼贴，宽度错落 */
+const W5 = ["w100","w60","w85","w60","w100","w70"];
+const g5 = document.getElementById("g5");
+DATA.s5.forEach((it, i) => {
+  const el = document.createElement("div");
+  el.className = "it " + W5[i % W5.length];
+  el.innerHTML = fig(it);
+  g5.appendChild(el);
+});
+
+/* S6 天：只用大图 */
+const g6 = document.getElementById("g6");
+DATA.s6.forEach((it, i) => {
+  const el = document.createElement("div");
+  el.className = i < 3 ? "photo-big" : "inset";
+  el.innerHTML = fig(it);
+  g6.appendChild(el);
+});
+
+/* S9 物证 */
+const g9 = document.getElementById("g9");
+DATA.s9.forEach(it => {
+  const el = document.createElement("div");
+  el.className = "it";
+  el.innerHTML = fig(it);
+  g9.appendChild(el);
+});
+
+/* 滚动淡入：只播一次 */
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+}, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+/* 进度条 */
+const bar = document.getElementById("bar");
+addEventListener("scroll", () => {
+  const h = document.documentElement.scrollHeight - innerHeight;
+  bar.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + "%";
+}, { passive: true });
+
+/* 结尾小交互 */
+const LINES = [
+  "以后也一起吧。",
+  "往后见。",
+  "以后也一起吃点什么。",
+  "下次那家，我们还去。",
+  "其实我早就想说了。"
+];
+let wIdx = -1;
+const whisper = document.getElementById("whisper");
+document.getElementById("signBtn").addEventListener("click", () => {
+  wIdx = (wIdx + 1) % LINES.length;
+  whisper.classList.remove("on");
+  void whisper.offsetWidth;
+  whisper.textContent = LINES[wIdx];
+  whisper.classList.add("on");
+});
+</script>
+</body>
+</html>
