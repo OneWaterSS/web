@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#07060a">
+<title>暴打小江</title>
+<meta name="description" content="甜甜专属出气筒。全 3D 物理，24 件道具，无冷却。">
+<meta property="og:title" content="暴打小江">
+<meta property="og:description" content="甜甜专属出气筒。全 3D 物理，24 件道具，无冷却。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23E5484D'/%3E%3Ccircle cx='32' cy='28' r='12' fill='%23F3CFAE'/%3E%3Cpath d='M20 46c0-7 5-12 12-12s12 5 12 12' fill='%23F3CFAE'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div id="vignette"></div>
+<div id="flash"></div>
+
+<header id="hud">
+  <div class="hud-left">
+    <div class="wordmark">暴打<span>小江</span></div>
+    <div class="round" id="roundChip">第 1 / 5 轮</div>
+  </div>
+  <div class="hud-center">
+    <div class="bar-meta">
+      <span id="phaseLabel">第一阶段 · 嘴硬</span>
+      <span class="shield" id="shieldChip">办公椅 700</span>
+      <span class="dmg"><b id="dmgNow">0</b><i>/</i><span id="dmgMax">6000</span></span>
+    </div>
+    <div class="bar">
+      <div class="fill" id="barFill"></div>
+      <span class="mark" style="left:33.333%"></span>
+      <span class="mark" style="left:66.666%"></span>
+    </div>
+  </div>
+  <div class="hud-right">
+    <button class="icon-btn" id="mute" aria-label="声音">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4Z"/><path class="wave" d="M15 9a4 4 0 0 1 0 6"/><path class="wave" d="M18 6a8 8 0 0 1 0 12"/></svg>
+    </button>
+  </div>
+</header>
+
+<div id="tray">
+  <div class="tray-head">
+    <span class="tray-title">道具</span>
+    <span class="tray-sub" id="traySub">无冷却 · 8 / 24 件 · 边打边解锁</span>
+    <button id="laserBtn" class="laser-btn" title="激光波">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 5 13h6l-1 9 9-12h-6Z"/></svg>
+      <span>激光波</span>
+    </button>
+    <button id="holeBtn" class="hole-btn" title="黑洞">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2a10 10 0 1 1-7.9 3.7"/><path d="M2.6 15.5A10 10 0 0 0 12 22"/></svg>
+      <span>黑洞</span>
+    </button>
+  </div>
+  <div class="slots" id="slots"></div>
+</div>
+
+<div id="hint">选一件道具，然后点画面空白处 —— 它会自己飞过去</div>
+<div id="powerbar"></div>
+<div id="fx"></div>
+<div id="banner"><span id="b1"></span><b id="b2"></b></div>
+<div id="unlock"></div>
+<div id="combo"><b>0</b><span>连击</span></div>
+<div id="say"></div>
+
+<div id="start" class="overlay on">
+  <div class="start-card">
+    <div class="kicker">甜甜专属 · 出气专用</div>
+    <h1>暴打<span>小江</span></h1>
+    <p>24 件道具和 6 种攻击，边打边解锁。约 10 分钟。</p>
+    <button id="btnStart" class="primary">开始揍他</button>
+    <div class="mini">全 3D 物理 · 边打边解锁</div>
+  </div>
+</div>
+
+<div id="choice" class="overlay modal">
+  <div class="modal-card">
+    <div class="kicker">伤害值已满</div>
+    <h2>小江倒下了</h2>
+    <p class="mline" id="choiceLine">他趴在地上，抬起头：<br>「要不……你先看看我写的东西？」</p>
+    <button id="btnForgive" class="primary">原谅你了</button>
+    <button id="btnContinue" class="ghost">继续暴打</button>
+    <div class="mnote" id="choiceNote">继续 → 他再爬起来，约 2 分钟</div>
+  </div>
+</div>
+
+<div id="letter" class="overlay">
+  <div class="paper">
+    <div class="paper-head">
+      <span>小江的道歉信</span>
+      <button id="skipLetter">跳过</button>
+    </div>
+    <div class="paper-scroll" id="letterScroll"></div>
+    <div class="paper-foot">
+      <span class="paper-tip" id="paperTip">点一下，字会快一点</span>
+      <button id="btnLetterNext" class="paper-next">我看完了</button>
+    </div>
+  </div>
+</div>
+
+<div id="cascade">
+  <div id="cascadeLines"></div>
+  <div id="final">
+    <svg class="heart" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 34S5 25 5 14.5C5 8.7 9.7 5 14.2 5c2.6 0 4.7 1.3 5.8 3.2C21.1 6.3 23.2 5 25.8 5 30.3 5 35 8.7 35 14.5 35 25 20 34 20 34Z" fill="#D95C4A"/></svg>
+    <h2>我爱你，甜甜。</h2>
+    <p>—— 小江</p>
+    <button id="btnHug" class="primary">抱一下</button>
+  </div>
+</div>
+
+<div id="end" class="overlay">
+  <div class="end-card">
+    <div class="stamp">值</div>
+    <h2>本次共揍小江 <b id="stHits">0</b> 下</h2>
+    <p class="end-sub">他说：值。</p>
+    <div class="stats">
+      <div><b id="stTime">00:00</b><span>用时</span></div>
+      <div><b id="stRounds">1</b><span>轮数</span></div>
+      <div><b id="stCombo">0</b><span>最高连击</span></div>
+    </div>
+    <div class="coupon"><span>补 打 券</span><small>永久有效 · 本券不设找零</small></div>
+    <button id="btnAgain" class="primary">再打一次</button>
+    <button id="btnHome" class="ghost">回到开头</button>
+  </div>
+</div>
+
+<script src="./build/bundle.js"></script>
+</body>
+</html>
